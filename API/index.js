@@ -3,8 +3,8 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { v4: uuidv4 } = require('uuid'); 
-const has = require('has-value');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs')
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -84,7 +84,7 @@ app.route('/Posts')
       res.json(newPost);
     })
 
-app.route('/Posts/postsId')
+app.route('/Posts/:postsId')
     .get((req, res) => {
       const resultPost = postData.Post.find(p => {
         if (p.postId == req.params.postsId) {
@@ -103,8 +103,34 @@ app.route('/Posts/postsId')
           res.json(resultPost);
         }
     })
-    .patch((req, res) => res.send('patch single Posts'))
-    .delete((res, req) => res.send('delete single Posts')) 
+    .put((req, res) => {
+      const id = req.params.postId
+      const data = postData.Post
+      
+        data[id]["title"] = req.body.title;
+        data[id]["description"] = req.body.description;
+        data[id]["category"] = req.body.category;
+        data[id]["location"] = req.body.location;
+        data[id]["images1"] = req.body.images1;
+        data[id]["images2"] = req.body.images2;
+        data[id]["images3"] = req.body.images3;
+        data[id]["images4"] = req.body.images4;
+        data[id]["askingPrice"] = req.body.askingPrice;
+        data[id]["deliveryType"] = req.body.deliveryType;
+        data[id]["dateOfPosting"] = req.body.dateOfPosting;
+        data[id]["sellerName"] = req.body.sellerName;
+        data[id]["sellerInfo"] = req.body.sellerInfo;
+      
+      postData.Post.push(data);
+
+      res.status(201);
+      res.json(updatePost);
+
+    })
+    .delete((req, res) => {
+      postData.Post = postData.Post.filter(po => po.postId != req.params.postId);
+      res.sendStatus(200);
+    }) 
 
     
 app.route('/User')
@@ -144,7 +170,7 @@ app.route('User/:userId')
         res.json(resultUser);
       }
     })
-    .patch((req,res) => res.send('patch sigle Users'))
+    .put((req,res) => res.send('patch sigle Users'))
     
 
 app.listen(port, () => {
