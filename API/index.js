@@ -30,6 +30,22 @@ let postData = {
       dateOfPosting: '15-2-2021',
       sellerName: 'Kalle Soukka',
       sellerInfo: 'Schoolstreet 2'
+    },
+    {
+      postId: uuidv4(),
+      title: 'Second bike',
+      description: 'This is a high quality mountain bike for normal condition biking',
+      category: 'Biking',
+      location: 'Oulu FI',
+      images1: 'Bike.png',
+      images2: 'Bike2.png',
+      images3: '',
+      images4: '',
+      askingPrice: 300,
+      deliveryType: 'Shipping',
+      dateOfPosting: '15-2-2021',
+      sellerName: 'Kalle Soukka',
+      sellerInfo: 'Schoolstreet 2'
     }
   ]
 }
@@ -57,6 +73,11 @@ let userData = {
     dateOfBirth: '1996-15-2'
   }
   ]
+}
+
+function checkThePost(postId) {;
+  const itemInfo = postData.Post.find(pos => pos.postId == postId);
+  return itemInfo ;
 }
 
 app.route('/Posts')
@@ -104,28 +125,33 @@ app.route('/Posts/:postsId')
         }
     })
     .put((req, res) => {
-      const id = req.params.postId
-      const data = postData.Post
-      
-        data[id]["title"] = req.body.title;
-        data[id]["description"] = req.body.description;
-        data[id]["category"] = req.body.category;
-        data[id]["location"] = req.body.location;
-        data[id]["images1"] = req.body.images1;
-        data[id]["images2"] = req.body.images2;
-        data[id]["images3"] = req.body.images3;
-        data[id]["images4"] = req.body.images4;
-        data[id]["askingPrice"] = req.body.askingPrice;
-        data[id]["deliveryType"] = req.body.deliveryType;
-        data[id]["dateOfPosting"] = req.body.dateOfPosting;
-        data[id]["sellerName"] = req.body.sellerName;
-        data[id]["sellerInfo"] = req.body.sellerInfo;
-      
-      postData.Post.push(data);
-
-      res.status(201);
-      res.json(updatePost);
-
+      itemInfo = checkThePost(req.params.postsId);
+      if (itemInfo != null)
+      {
+        for (var i = 0; i < postData.Post.length; i++) {
+          if (postData.Post[i].postId == req.params.postsId) {
+            postData.Post[i].title == req.body.title ;
+            postData.Post[i].description == req.body.description;
+            postData.Post[i].category == req.body.category;
+            postData.Post[i].location == req.body.location;
+            postData.Post[i].images1 == req.body.images1;
+            postData.Post[i].images2 == req.body.images2;
+            postData.Post[i].images3 == req.body.images3;
+            postData.Post[i].images4 == req.body.images4;
+            postData.Post[i].askingPrice == req.body.askingPrice;
+            postData.Post[i].deliveryType == req.body.deliveryType;
+            postData.Post[i].dateOfPosting == req.body.dateOfPosting;
+            postData.Post[i].sellerName == req.body.sellerName;
+            postData.Post[i].sellerInfo == req.body.sellerInfo;
+          };
+      }
+      res.sendStatus(200);
+      res.json({postId:itemInfo.postId}) ;
+      }
+      else 
+      {
+        res.sendStatus(404);
+      }
     })
     .delete((req, res) => {
       postData.Post = postData.Post.filter(po => po.postId != req.params.postId);
@@ -170,7 +196,30 @@ app.route('User/:userId')
         res.json(resultUser);
       }
     })
-    .put((req,res) => res.send('patch sigle Users'))
+    .put((req,res) => {
+      const updateUser = userdata.Users.find(us => {
+        if (us.id == req.params.userId) {
+          userData.Users.push({
+            id: req.params.id,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            dateOfBirth: req.body.dateOfBirth
+          })
+        }
+        else {
+          return false;
+        }
+      });
+      if(updateUser == undefined)
+      {
+        res.sendStatus(404)
+      }
+      else
+      {
+        res.json(updateUser)
+      }
+    })
     
 
 app.listen(port, () => {
