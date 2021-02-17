@@ -4,7 +4,6 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
-const fs = require('fs')
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -13,8 +12,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-let postData = {
-  Post: [
+let Post = [
     {
       postId: uuidv4(),
       title: 'Mountain Bike',
@@ -48,7 +46,6 @@ let postData = {
       sellerInfo: 'Schoolstreet 2'
     }
   ]
-}
 let userData = {
   Users: [
   {
@@ -75,13 +72,8 @@ let userData = {
   ]
 }
 
-function checkThePost(postId) {;
-  const itemInfo = postData.Post.find(pos => pos.postId == postId);
-  return itemInfo ;
-}
-
 app.route('/Posts')
-    .get((req, res) => { res.json(postData)})
+    .get((req, res) => { res.json(Post)})
     .post((req, res) => {
       const newPost = {
         postId: uuidv4(),
@@ -99,7 +91,7 @@ app.route('/Posts')
         sellerName: req.body.sellerName,
         sellerInfo: req.body.sellerInfo
       };
-      postData.Post.push(newPost);
+      Post.push(newPost);
 
       res.status(201);
       res.json(newPost);
@@ -107,7 +99,7 @@ app.route('/Posts')
 
 app.route('/Posts/:postsId')
     .get((req, res) => {
-      const resultPost = postData.Post.find(p => {
+      const resultPost = Post.find(p => {
         if (p.postId == req.params.postsId) {
           return true;
         }
@@ -125,36 +117,28 @@ app.route('/Posts/:postsId')
         }
     })
     .put((req, res) => {
-      itemInfo = checkThePost(req.params.postsId);
-      if (itemInfo != null)
-      {
-        for (var i = 0; i < postData.Post.length; i++) {
-          if (postData.Post[i].postId == req.params.postsId) {
-            postData.Post[i].title == req.body.title ;
-            postData.Post[i].description == req.body.description;
-            postData.Post[i].category == req.body.category;
-            postData.Post[i].location == req.body.location;
-            postData.Post[i].images1 == req.body.images1;
-            postData.Post[i].images2 == req.body.images2;
-            postData.Post[i].images3 == req.body.images3;
-            postData.Post[i].images4 == req.body.images4;
-            postData.Post[i].askingPrice == req.body.askingPrice;
-            postData.Post[i].deliveryType == req.body.deliveryType;
-            postData.Post[i].dateOfPosting == req.body.dateOfPosting;
-            postData.Post[i].sellerName == req.body.sellerName;
-            postData.Post[i].sellerInfo == req.body.sellerInfo;
-          };
-      }
-      res.sendStatus(200);
-      res.json({postId:itemInfo.postId}) ;
-      }
-      else 
-      {
-        res.sendStatus(404);
-      }
+        for (element of Post) {
+          if(element.postId == req.params.postsId) {
+              element.title == req.body.title;
+              element.description == req.body.description;
+              element.category == req.body.category;
+              element.location == req.body.location;
+              element.images1 == req.body.images1;
+              element.images2 == req.body.images2;
+              element.images3 == req.body.images3;
+              element.images4 == req.body.images4;
+              element.askingPrice == req.body.askingPrice;
+              element.deliveryType == req.body.deliveryType;
+              element.dateOfPosting == req.body.dateOfPosting;
+              element.sellerName == req.body.sellerName;
+              element.sellerInfo == req.body.sellerInfo;
+              Post.push(element);
+              res.json(element)
+            }
+        }
     })
     .delete((req, res) => {
-      postData.Post = postData.Post.filter(po => po.postId != req.params.postId);
+      Post = Post.filter(po => po.postId != req.params.postId);
       res.sendStatus(200);
     }) 
 
