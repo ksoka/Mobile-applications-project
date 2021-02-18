@@ -117,6 +117,7 @@ app.route('/Posts/:postsId')
         }
     })
     .put((req, res) => {
+      var reArray = [];
         for (element of Post) {
           if(element.postId == req.params.postsId) {
               element.title == req.body.title;
@@ -132,8 +133,8 @@ app.route('/Posts/:postsId')
               element.dateOfPosting == req.body.dateOfPosting;
               element.sellerName == req.body.sellerName;
               element.sellerInfo == req.body.sellerInfo;
-              Post.push(element);
-              res.json(element)
+              reArray.push(element);
+              res.json(reArray)
             }
         }
     })
@@ -178,30 +179,6 @@ app.route('User/:userId')
       else
       {
         res.json(resultUser);
-      }
-    })
-    .put((req,res) => {
-      const updateUser = userdata.Users.find(us => {
-        if (us.id == req.params.userId) {
-          userData.Users.push({
-            id: req.params.id,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            dateOfBirth: req.body.dateOfBirth
-          })
-        }
-        else {
-          return false;
-        }
-      });
-      if(updateUser == undefined)
-      {
-        res.sendStatus(404)
-      }
-      else
-      {
-        res.json(updateUser)
       }
     })
     
