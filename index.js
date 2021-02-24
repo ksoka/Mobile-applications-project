@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
+
+app.set('port', (process.env.PORT || 80));
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -184,5 +185,5 @@ app.route('User/:userId')
     
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Example app listening at {port}`)
 })
