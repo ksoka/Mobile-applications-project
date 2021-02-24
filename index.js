@@ -184,6 +184,6 @@ app.route('User/:userId')
     })
     
 
-app.listen(port, () => {
+app.listen(app.get('port'), () => {
   console.log(`Example app listening at {port}`)
 })
